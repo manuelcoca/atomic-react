@@ -1,0 +1,76 @@
+{
+  "name": "atomic-react",
+  "version": "1.0.0",
+  "description": "Achieve atomic and decoupled component design for truly reusable React components. Write once, compose anywhere.",
+  "author": {
+    "name": "Manuel Coca",
+    "email": "connect@manuel.co"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "atomic",
+    "composition",
+    "architecture",
+    "design",
+    "state-management",
+    "components",
+    "typescript",
+    "zustand"
+  ],
+  "type": "module",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "http://localhost:4873/"
+  },
+  "scripts": {
+    "build": "tsc -b && vite build",
+    "build:analyze": "vite-bundle-visualizer --output dist/stats/stats.html",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "pnpm prettier --check .",
+    "format:fix": "pnpm prettier --write .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "publish": "node scripts/publish.js"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.33.0",
+    "@jsdevtools/npm-publish": "^3.1.1",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react-swc": "^4.0.0",
+    "eslint": "^9.33.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "prettier": "^3.6.2",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.39.1",
+    "verdaccio": "^6.1.6",
+    "vite": "^7.1.2",
+    "vite-bundle-visualizer": "^1.2.1",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}
