@@ -35,12 +35,11 @@ npm install atomic-react zustand
 ```tsx
 interface SearchState {
   searchTerm: string;
-  isLoading: boolean;
 }
 
 interface SearchActions {
   setSearchTerm: (term: string) => void;
-  setLoading: (loading: boolean) => void;
+  clear: () => void;
 }
 
 interface SearchFunctions {
@@ -48,37 +47,31 @@ interface SearchFunctions {
   formatSearchTerm: (term: string) => string;
 }
 
-// Business logic functions (pure, no state access)
 const searchFunctions: SearchFunctions = {
-  validateSearchTerm: (term: string) => term.length >= 2,
-  formatSearchTerm: (term: string) => term.trim().toLowerCase(),
+  validateSearchTerm: (term: string) => term.length > 0,
+  formatSearchTerm: (term: string) => term.trim(),
 };
 
-// Named function component with useEffect and API integration
-function SearchInputComponent({
+export type SearchComponentProps = {
+  searchTerm: string;
+  setSearchTerm: (searchTerm: string) => void;
+  validateSearchTerm: (searchTerm: string) => boolean;
+  formatSearchTerm: (searchTerm: string) => string;
+};
+
+export function SearchComponent({
   searchTerm,
   setSearchTerm,
-  isLoading,
-  setLoading,
   validateSearchTerm,
   formatSearchTerm,
-}: SearchState & SearchActions & SearchFunctions) {
-  const { data: suggestions } = useQuery({
-    queryKey: ['search-suggestions', searchTerm],
-    queryFn: () => fetchSearchSuggestions(searchTerm),
-    enabled: validateSearchTerm(searchTerm),
-  });
-
+}: SearchComponentProps) {
   useEffect(() => {
     if (searchTerm && validateSearchTerm(searchTerm)) {
-      setLoading(true);
-      // Simulate search delay
-      const timer = setTimeout(() => setLoading(false), 500);
-      return () => clearTimeout(timer);
+      console.log('searchTerm', searchTerm);
     }
-  }, [searchTerm, setLoading, validateSearchTerm]);
+  }, [searchTerm, validateSearchTerm]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatSearchTerm(e.target.value);
     setSearchTerm(formatted);
   };
@@ -89,35 +82,27 @@ function SearchInputComponent({
         value={searchTerm}
         onChange={handleChange}
         placeholder="Search..."
-        disabled={isLoading}
       />
-      {isLoading && <span>Searching...</span>}
-      {suggestions && (
-        <ul>
-          {suggestions.map((item) => (
-            <li key={item.id}>{item.name}</li>
-          ))}
-        </ul>
-      )}
     </div>
   );
 }
 
-const SearchInputAtom = atomic<SearchState, SearchFunctions, SearchActions>({
+const SearchAtom = atomic<SearchState, SearchFunctions, SearchActions>({
   state: {
     searchTerm: '',
-    isLoading: false,
   },
-  stateActions: (set, get, functions) => ({
+  stateActions: (set, _, functions) => ({
     setSearchTerm: (term: string) => {
       if (functions.validateSearchTerm(term)) {
         set({ searchTerm: term });
       }
     },
-    setLoading: (loading: boolean) => set({ isLoading: loading }),
+    clear: () => {
+      set({ searchTerm: '' });
+    },
   }),
   functions: searchFunctions,
-  component: SearchInputComponent,
+  component: SearchComponent,
 });
 ```
 
@@ -127,15 +112,15 @@ Returns: `{ useStore, Atomic, select }`
 
 ```tsx
 const useSearchTerm = createSelector(
-  SearchInput.useStore,
+  SearchAtom.useStore,
   (state) => state.searchTerm,
 );
 ```
 
-### `SearchInput.select(selector)`
+### `SearchAtom.select(selector)`
 
 ```tsx
-const useSearchTerm = SearchInput.select((state) => state.searchTerm);
+const useSearchTerm = SearchAtom.select((state) => state.searchTerm);
 ```
 
 ## License
