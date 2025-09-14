@@ -33,10 +33,25 @@ npm install atomic-react zustand
 ### `atomic({ state, stateActions, functions, component })`
 
 ```tsx
+interface SearchState {
+  searchTerm: string;
+  isLoading: boolean;
+}
+
+interface SearchActions {
+  setSearchTerm: (term: string) => void;
+  setLoading: (loading: boolean) => void;
+}
+
+interface SearchFunctions {
+  validateSearchTerm: (term: string) => boolean;
+  formatSearchTerm: (term: string) => string;
+}
+
 // Business logic functions (pure, no state access)
-const searchFunctions = {
-  validateSearchTerm: (term) => term.length >= 2,
-  formatSearchTerm: (term) => term.trim().toLowerCase(),
+const searchFunctions: SearchFunctions = {
+  validateSearchTerm: (term: string) => term.length >= 2,
+  formatSearchTerm: (term: string) => term.trim().toLowerCase(),
 };
 
 // Named function component with useEffect and API integration
@@ -47,7 +62,7 @@ function SearchInputComponent({
   setLoading,
   validateSearchTerm,
   formatSearchTerm,
-}) {
+}: SearchState & SearchActions & SearchFunctions) {
   const { data: suggestions } = useQuery({
     queryKey: ['search-suggestions', searchTerm],
     queryFn: () => fetchSearchSuggestions(searchTerm),
@@ -88,18 +103,18 @@ function SearchInputComponent({
   );
 }
 
-const SearchInputAtom = atomic({
+const SearchInputAtom = atomic<SearchState, SearchFunctions, SearchActions>({
   state: {
     searchTerm: '',
     isLoading: false,
   },
   stateActions: (set, get, functions) => ({
-    setSearchTerm: (term) => {
+    setSearchTerm: (term: string) => {
       if (functions.validateSearchTerm(term)) {
         set({ searchTerm: term });
       }
     },
-    setLoading: (loading) => set({ isLoading: loading }),
+    setLoading: (loading: boolean) => set({ isLoading: loading }),
   }),
   functions: searchFunctions,
   component: SearchInputComponent,
