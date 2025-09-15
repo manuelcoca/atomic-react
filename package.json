@@ -1,5 +1,5 @@
 {
-  "name": "atomic-react",
+  "name": "@coca/atomic-react",
   "version": "1.0.0",
   "description": "Achieve atomic and decoupled component design for truly reusable React components. Write once, compose anywhere.",
   "author": {
