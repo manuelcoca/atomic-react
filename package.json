@@ -33,7 +33,7 @@
   ],
   "publishConfig": {
     "access": "public",
-    "registry": "http://localhost:4873/"
+    "registry": "https://registry.npmjs.org/"
   },
   "scripts": {
     "build": "tsc -b && vite build",
