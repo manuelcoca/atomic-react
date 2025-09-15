@@ -4,7 +4,7 @@ async function main() {
   console.log('Publishing package to local Verdaccio registry');
 
   try {
-    execSync('npm publish --registry http://localhost:4873/', { 
+    execSync('npm publish', { 
       stdio: 'inherit',
       cwd: process.cwd()
     });
