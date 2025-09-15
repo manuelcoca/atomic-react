@@ -4,23 +4,24 @@
 
 ## The Problem
 
-In every project, we experience "Whack-A-Mole" states - one change leads to another bug or breaks another feature. This happens because UI, state, and business logic are rarely completely isolated, especially in larger projects. Existing tools and conventions don't solve this problem. It's about software design.
+React lacks built-in support for type-safe dependency injection and factory patterns. This forces developers into prop drilling, context complexity, or tightly coupled components where UI, state, and business logic become entangled. The result: "Whack-A-Mole" states where one change breaks another feature.
 
 ## Why Atomic?
 
-Atomic React provides a design template and convention. It builds a small wrapper around function components to separate and inject state and business logic:
+Atomic React solves this through type-safe dependency injection and factory patterns for React components:
 
-- ✅ **True Reusability** - Same component works everywhere
+- ✅ **Type-Safe DI** - Inject state and business logic with full TypeScript support
+- ✅ **Factory Pattern** - Create reusable component factories with isolated dependencies
 - ✅ **Zero Coupling** - UI, state, and business logic completely separated
-- ✅ **No Prop Drilling** - Components access their own state
+- ✅ **No Prop Drilling** - Dependencies injected directly into components
 
 ## How It Works
 
-Three decoupled layers:
+Factory pattern with dependency injection across three layers:
 
-1. **UI** - Pure components (no business logic)
-2. **State** - Independent Zustand stores injected into each atom; all other atoms can access the Zustand stores
-3. **Business** - Inject your business logic
+1. **UI** - Pure components receive dependencies as props
+2. **State** - Independent Zustand stores injected into each "atom"; all other atoms can access the Zustand stores
+3. **Business** - Functions and services injected
 
 ## Installation
 
